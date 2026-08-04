@@ -597,6 +597,408 @@ requestAnimationFrame(draw);
 
 </body>
 </html>
+let canvas=document.getElementById("canvas");
+let ctx=canvas.getContext("2d");
+
+
+let gamstVote=0;
+let hmbVote=0;
+
+let myTeam="";
+
+
+let scoreGamst=0;
+let scoreHmb=0;
+
+
+
+let players=[
+
+{
+name:"감스트",
+x:200,
+y:250,
+color:"#f1c40f",
+hp:100
+},
+
+{
+name:"홍명보",
+x:700,
+y:250,
+color:"#e74c3c",
+hp:100
+}
+
+];
+
+
+
+// ⚽ 축구공
+
+let ball={
+
+x:450,
+y:250,
+dx:0,
+dy:0,
+speed:8
+
+};
+
+
+
+let keys={};
+
+
+
+function startGame(){
+
+document.getElementById("start").style.display="none";
+
+document.getElementById("select").style.display="flex";
+
+}
+
+
+
+function choose(team){
+
+
+if(team=="gamst"){
+
+gamstVote++;
+
+myTeam="감스트";
+
+}
+
+else{
+
+hmbVote++;
+
+myTeam="홍명보";
+
+}
+
+
+document.getElementById("gamstVote").innerHTML=gamstVote;
+
+document.getElementById("hmbVote").innerHTML=hmbVote;
+
+
+document.getElementById("select").style.display="none";
+
+document.getElementById("battle").style.display="flex";
+
+
+document.getElementById("teamText").innerHTML=
+myTeam+" 팀 참가";
+
+
+
+gameLoop();
+
+}
+
+
+
+
+document.addEventListener("keydown",function(e){
+
+keys[e.code]=true;
+
+
+
+// ⚽ 공 차기
+
+if(e.code=="Space"){
+
+
+let p=myTeam=="감스트"?players[0]:players[1];
+
+
+
+let direction=p.x < 450 ? 1:-1;
+
+
+
+if(
+Math.abs(p.x-ball.x)<80 &&
+Math.abs(p.y-ball.y)<80
+){
+
+
+ball.dx=direction*ball.speed;
+
+ball.dy=0;
+
+
+}
+
+
+}
+
+
+
+});
+
+
+
+document.addEventListener("keyup",function(e){
+
+keys[e.code]=false;
+
+});
+
+
+
+
+
+
+function drawField(){
+
+
+// 운동장
+
+ctx.fillStyle="#16702b";
+
+ctx.fillRect(
+0,
+0,
+900,
+500
+);
+
+
+
+// 중앙선
+
+ctx.strokeStyle="white";
+
+ctx.beginPath();
+
+ctx.moveTo(450,0);
+
+ctx.lineTo(450,500);
+
+ctx.stroke();
+
+
+
+// 골대
+
+ctx.strokeRect(
+0,
+180,
+30,
+140
+);
+
+
+ctx.strokeRect(
+870,
+180,
+30,
+140
+);
+
+
+
+}
+
+
+
+
+function gameLoop(){
+
+
+
+ctx.clearRect(0,0,900,500);
+
+
+drawField();
+
+
+
+// 내 선수
+
+let me=myTeam=="감스트"?players[0]:players[1];
+
+
+
+// 이동
+
+if(keys["ArrowLeft"])
+me.x-=5;
+
+
+if(keys["ArrowRight"])
+me.x+=5;
+
+
+if(keys["ArrowUp"])
+me.y-=5;
+
+
+if(keys["ArrowDown"])
+me.y+=5;
+
+
+
+// 상대 AI
+
+let enemy=myTeam=="감스트"?players[1]:players[0];
+
+
+if(enemy.x<ball.x)
+enemy.x+=1;
+
+else
+enemy.x-=1;
+
+
+
+// 선수 그리기
+
+players.forEach(p=>{
+
+
+ctx.fillStyle=p.color;
+
+
+ctx.beginPath();
+
+ctx.arc(
+p.x,
+p.y,
+30,
+0,
+Math.PI*2
+);
+
+
+ctx.fill();
+
+
+
+ctx.fillStyle="white";
+
+ctx.fillText(
+p.name,
+p.x-25,
+p.y-40
+);
+
+
+
+});
+
+
+
+
+
+// ⚽ 공 이동
+
+
+ball.x+=ball.dx;
+
+ball.y+=ball.dy;
+
+
+
+// 마찰
+
+ball.dx*=0.98;
+
+
+
+// 공 그리기
+
+
+ctx.fillStyle="white";
+
+ctx.beginPath();
+
+ctx.arc(
+ball.x,
+ball.y,
+12,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+
+
+
+
+// 골 판정
+
+
+if(ball.x<20){
+
+
+scoreHmb++;
+
+
+alert("홍명보 팀 골!");
+
+resetBall();
+
+
+}
+
+
+
+if(ball.x>880){
+
+
+scoreGamst++;
+
+
+alert("감스트 팀 골!");
+
+resetBall();
+
+
+}
+
+
+
+ctx.fillStyle="white";
+
+ctx.font="30px Arial";
+
+ctx.fillText(
+"감스트 "+scoreGamst+" : "+scoreHmb+" 홍명보",
+300,
+40
+);
+
+
+
+
+requestAnimationFrame(gameLoop);
+
+
+}
+
+
+
+
+
+function resetBall(){
+
+
+ball.x=450;
+
+ball.y=250;
+
+ball.dx=0;
+
+}
 
 
 
