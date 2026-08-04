@@ -2,108 +2,83 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>SQUAD SHOWDOWN</title>
+<title>감스트 VS 홍명보 축구전</title>
 
 <style>
 
-*{
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
-
 body{
-margin:0;
-background:#050b14;
-color:white;
-overflow:hidden;
+    margin:0;
+    background:#07111f;
+    color:white;
+    font-family:Arial;
+    text-align:center;
 }
 
 
-header{
-height:60px;
-background:#000;
-border-bottom:2px solid orange;
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:0 30px;
-font-weight:bold;
+#startPage,
+#selectPage,
+#gamePage{
+
+    width:100%;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+
 }
 
 
-.title{
-color:#f39c12;
-font-size:22px;
-}
+#selectPage,
+#gamePage{
 
+    display:none;
 
-.vote{
-padding:15px;
-background:#111827;
-text-align:center;
 }
 
 
 button{
-padding:12px 25px;
-border:0;
-font-weight:bold;
-cursor:pointer;
-border-radius:5px;
-font-size:16px;
+
+    padding:15px 40px;
+    margin:10px;
+    border:0;
+    border-radius:10px;
+    font-size:20px;
+    font-weight:bold;
+    cursor:pointer;
+
+}
+
+
+.start{
+
+    background:#f39c12;
+
 }
 
 
 .gamst{
-background:#f1c40f;
+
+    background:#f1c40f;
+
 }
 
 
 .hmb{
-background:#e74c3c;
-color:white;
-}
 
+    background:#e74c3c;
+    color:white;
 
-.bar{
-height:25px;
-background:#222;
-display:flex;
-margin-top:15px;
-}
-
-
-#gamstBar{
-background:#f1c40f;
-width:50%;
-}
-
-
-#hmbBar{
-background:#e74c3c;
-width:50%;
 }
 
 
 canvas{
 
-display:block;
-margin:15px auto;
-background:#0b1322;
-border:2px solid #1e3a8a;
+    background:#14833b;
+    border:4px solid white;
 
 }
 
-
-
-.info{
-
-display:flex;
-justify-content:center;
-gap:40px;
-font-size:20px;
-
-}
 
 </style>
 
@@ -113,88 +88,96 @@ font-size:20px;
 <body>
 
 
-<header>
-
-<div>← 대문</div>
-
-<div class="title">
-SQUAD SHOWDOWN
-</div>
-
-<div>
-LIVE
-</div>
-
-</header>
+<div id="startPage">
 
 
-
-<div class="vote">
-
+<h1>
+⚽ SQUAD SHOWDOWN
+</h1>
 
 <h2>
-⚔ 진영 선택
+감스트 VS 홍명보
 </h2>
 
 
-<button class="gamst" onclick="vote('gamst')">
+<button class="start" onclick="openSelect()">
+게임 시작
+</button>
+
+
+</div>
+
+
+
+
+
+<div id="selectPage">
+
+
+<h1>
+팀 선택
+</h1>
+
+
+<h2>
+감스트 투표 :
+<span id="gamstVote">0</span>
+</h2>
+
+
+<h2>
+홍명보 투표 :
+<span id="hmbVote">0</span>
+</h2>
+
+
+
+<button class="gamst" onclick="startMatch('gamst')">
 감스트 팀
 </button>
 
 
-<button class="hmb" onclick="vote('hmb')">
+
+<button class="hmb" onclick="startMatch('hmb')">
 홍명보 팀
 </button>
 
 
-
-<div class="info">
-
-<div>
-감스트 :
-<span id="gv">
-0
-</span>
-표
-</div>
-
-
-<div>
-홍명보 :
-<span id="hv">
-0
-</span>
-표
-</div>
-
-
-</div>
-
-
-
-<div class="bar">
-
-<div id="gamstBar"></div>
-
-<div id="hmbBar"></div>
-
-</div>
-
-
 </div>
 
 
 
 
-<canvas id="game"
-width="1000"
-height="400">
 
-</canvas>
+<div id="gamePage">
+
+
+<h1>
+축구 경기
+</h1>
+
+
+<canvas id="field" width="900" height="500"></canvas>
+
+
+<p>
+방향키 이동 / SPACE 슛
+</p>
+
+
+</div>
+
+
 
 
 
 <script>
+
+
+const canvas=document.getElementById("field");
+
+const ctx=canvas.getContext("2d");
+
 
 
 let gamstVote=0;
@@ -202,106 +185,38 @@ let gamstVote=0;
 let hmbVote=0;
 
 
-let team=null;
+
+let started=false;
 
 
 
-let player=null;
+let player={
 
-
-
-function vote(t){
-
-
-if(team){
-alert("이미 선택했습니다");
-return;
-}
-
-
-team=t;
-
-
-
-if(t=="gamst"){
-
-gamstVote++;
-
-player={
-
-x:100,
-
-y:200,
-
-color:"#f1c40f",
-
-hp:100
+x:200,
+y:250,
+color:"#f1c40f"
 
 };
 
 
-}else{
 
+let enemy={
 
-hmbVote++;
-
-
-player={
-
-x:900,
-
-y:200,
-
-color:"#e74c3c",
-
-hp:100
+x:700,
+y:250,
+color:"#e74c3c"
 
 };
 
 
-}
 
+let ball={
 
-updateVote();
+x:450,
+y:250,
+speedX:0
 
-
-}
-
-
-
-function updateVote(){
-
-
-let total=gamstVote+hmbVote;
-
-
-let g=50;
-
-
-if(total){
-
-g=gamstVote/total*100;
-
-}
-
-
-document.getElementById("gv").innerHTML=gamstVote;
-
-document.getElementById("hv").innerHTML=hmbVote;
-
-
-document.getElementById("gamstBar").style.width=g+"%";
-
-document.getElementById("hmbBar").style.width=(100-g)+"%";
-
-
-}
-
-
-
-const canvas=document.getElementById("game");
-
-const ctx=canvas.getContext("2d");
+};
 
 
 
@@ -309,35 +224,167 @@ let keys={};
 
 
 
-document.addEventListener("keydown",e=>{
 
-keys[e.key]=true;
+
+function openSelect(){
+
+
+document.getElementById("startPage").style.display="none";
+
+document.getElementById("selectPage").style.display="flex";
+
+
+}
+
+
+
+
+
+function startMatch(team){
+
+
+
+if(team==="gamst"){
+
+gamstVote++;
+
+player.x=200;
+
+player.color="#f1c40f";
+
+
+}else{
+
+
+hmbVote++;
+
+player.x=700;
+
+player.color="#e74c3c";
+
+
+}
+
+
+
+document.getElementById("gamstVote").innerText=gamstVote;
+
+document.getElementById("hmbVote").innerText=hmbVote;
+
+
+
+document.getElementById("selectPage").style.display="none";
+
+document.getElementById("gamePage").style.display="flex";
+
+
+
+if(!started){
+
+started=true;
+
+gameLoop();
+
+}
+
+
+}
+
+
+
+
+
+
+document.addEventListener("keydown",function(e){
+
+keys[e.code]=true;
+
+
+
+if(e.code==="Space"){
+
+
+if(
+Math.abs(player.x-ball.x)<70 &&
+Math.abs(player.y-ball.y)<70
+){
+
+
+if(player.x<ball.x){
+
+ball.speedX=10;
+
+}else{
+
+ball.speedX=-10;
+
+}
+
+
+}
+
+
+}
+
 
 });
 
 
-document.addEventListener("keyup",e=>{
 
-keys[e.key]=false;
+
+
+document.addEventListener("keyup",function(e){
+
+keys[e.code]=false;
 
 });
 
 
 
-function loop(){
-
-
-ctx.clearRect(
-0,
-0,
-1000,
-400
-);
 
 
 
-if(player){
+function gameLoop(){
 
+
+
+ctx.clearRect(0,0,900,500);
+
+
+
+// 잔디
+
+ctx.fillStyle="#14833b";
+
+ctx.fillRect(0,0,900,500);
+
+
+
+// 중앙선
+
+ctx.strokeStyle="white";
+
+ctx.lineWidth=3;
+
+ctx.beginPath();
+
+ctx.moveTo(450,0);
+
+ctx.lineTo(450,500);
+
+ctx.stroke();
+
+
+
+// 골대
+
+ctx.strokeRect(0,180,40,140);
+
+ctx.strokeRect(860,180,40,140);
+
+
+
+// 이동
 
 if(keys["ArrowLeft"])
 player.x-=5;
@@ -356,34 +403,90 @@ player.y+=5;
 
 
 
-ctx.fillStyle=player.color;
+// 공 이동
 
+ball.x+=ball.speedX;
+
+
+ball.speedX*=0.97;
+
+
+
+// 선수
+
+drawCircle(player);
+
+drawCircle(enemy);
+
+
+
+// 공
+
+ctx.fillStyle="white";
 
 ctx.beginPath();
 
-
-ctx.arc(
-player.x,
-player.y,
-20,
-0,
-Math.PI*2
-);
-
+ctx.arc(ball.x,ball.y,12,0,Math.PI*2);
 
 ctx.fill();
 
 
+
+// 골
+
+if(ball.x<0){
+
+alert("홍명보 팀 골!");
+
+resetBall();
+
 }
 
 
-requestAnimationFrame(loop);
+
+if(ball.x>900){
+
+alert("감스트 팀 골!");
+
+resetBall();
+
+}
+
+
+
+requestAnimationFrame(gameLoop);
 
 
 }
 
 
-loop();
+
+
+
+
+function drawCircle(obj){
+
+ctx.fillStyle=obj.color;
+
+ctx.beginPath();
+
+ctx.arc(obj.x,obj.y,30,0,Math.PI*2);
+
+ctx.fill();
+
+}
+
+
+
+
+
+function resetBall(){
+
+ball.x=450;
+
+ball.speedX=0;
+
+}
 
 
 
