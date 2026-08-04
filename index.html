@@ -1,1 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>우리나라 축구, 지금 괜찮은가?</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Pretendard', -apple-system, sans-serif;
+            background-color: #0c192c;
+            color: #ffffff;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            overflow: hidden;
+            background-image: linear-gradient(rgba(12, 25, 44, 0.85), rgba(12, 25, 44, 0.95)), url('https://unsplash.com');
+            background-size: cover;
+            background-position: center;
+        }
+        header { padding-top: 40px; text-align: center; }
+        .tag {
+            background-color: #d1232a;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .main-content {
+            text-align: center;
+            max-width: 700px;
+            padding: 0 20px;
+        }
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            color: #f8fafc;
+        }
+        h1 span { color: #d1232a; }
+        p {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        .btn {
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background-color: #d1232a;
+            color: white;
+        }
+        .btn-primary:hover { background-color: #b91c22; }
+        .btn-outline {
+            border: 2px solid #475569;
+            color: white;
+        }
+        .btn-outline:hover { border-color: white; background-color: rgba(255,255,255,0.05); }
+        footer { padding-bottom: 30px; font-size: 0.9rem; color: #64748b; }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 2.3rem; }
+            p { font-size: 1rem; }
+            .btn-group { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="tag">KOREAN FOOTBALL REPORT</div>
+    </header>
+    
+    <div class="main-content">
+        <h1>우리나라 축구,<br>지금 <span>괜찮은가?</span></h1>
+        <p>대표팀의 방향성부터 인프라, 세대교체까지.<br>대한민국 축구의 현재 주소를 날카롭게 짚어봅니다.</p>
+        <div class="btn-group">
+            <a href="#intro" class="btn btn-primary">토론 참여하기</a>
+            <a href="#analysis" class="btn btn-outline">현실 진단 보기</a>
+        </div>
+    </div>
+    
+    <footer>
+        &copy; 2026 Korean Football Insight. All rights reserved.
+    </footer>
+</body>
+</html>
 
