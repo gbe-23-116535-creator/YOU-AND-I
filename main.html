@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>끝장 토론: 대한민국 축구의 운명</title>
+    <title>SQUAD BATTLE: 감스트 vs 홍명보</title>
     <style>
         /* 기본 스타일 초기화 */
         * {
@@ -14,368 +14,322 @@
         }
 
         body {
-            background-color: #0c192c;
+            background-color: #050b14;
             color: #ffffff;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
+            overflow: hidden; /* 전체 페이지 스크롤을 막고 내부 진영만 스크롤하도록 설정 */
         }
 
-        /* 네비게이션 바 */
+        /* 배틀그라운드 풍 상단 UI */
         nav {
             width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+            padding: 15px 30px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            z-index: 10;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .back-btn {
             color: #94a3b8;
             text-decoration: none;
             font-size: 0.9rem;
-            transition: color 0.3s;
-        }
-
-        .back-btn:hover {
-            color: #ffffff;
-        }
-
-        .live-badge {
-            background-color: #d1232a;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 4px;
-            font-size: 0.8rem;
             font-weight: 700;
-            animation: blink 1.5s infinite;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        @keyframes blink {
-            50% { opacity: 0.5; }
-        }
+        .back-btn:hover { color: #ffffff; }
 
-        /* 메인 컨테이너 */
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px 60px 20px;
-            flex: 1;
-        }
-
-        /* 토론 헤더 */
-        .debate-header {
+        .battle-title {
+            font-size: 1.4rem;
+            font-weight: 900;
+            letter-spacing: 2px;
             text-align: center;
-            margin-bottom: 40px;
+            color: #f39c12;
+            text-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
         }
 
-        .debate-header h1 {
-            font-size: 2.2rem;
-            font-weight: 800;
-            margin-bottom: 10px;
+        .live-status {
+            background-color: #e74c3c;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            animation: pulse 1.5s infinite;
         }
 
-        .debate-header p {
-            color: #94a3b8;
-            font-size: 1.1rem;
+        @keyframes pulse {
+            50% { opacity: 0.4; }
         }
 
-        /* 📊 실시간 투표 게이지 바 스타일 */
-        .poll-container {
-            background-color: #112240;
-            border: 1px solid #1e3a8a;
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        /* 📊 상단 실시간 스코어보드 (배그 매치 스타일) */
+        .scoreboard {
+            width: 100%;
+            max-width: 800px;
+            margin: 10px auto;
+            padding: 15px 20px;
+            background: rgba(17, 24, 39, 0.85);
+            border: 2px solid #2c3e50;
+            border-radius: 6px;
+            z-index: 10;
         }
 
-        .poll-header {
+        .score-header {
             display: flex;
             justify-content: space-between;
-            font-weight: 700;
-            font-size: 1.1rem;
-            margin-bottom: 12px;
+            font-weight: 900;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
         }
 
-        .gamst-color { color: #eab308; }
-        .hmb-color { color: #f43f5e; }
+        .gamst-team-text { color: #f1c40f; text-shadow: 0 0 5px rgba(241, 196, 15, 0.3); }
+        .hmb-team-text { color: #e74c3c; text-shadow: 0 0 5px rgba(231, 76, 60, 0.3); }
 
-        .progress-bar-wrapper {
+        .vs-bar-wrapper {
             width: 100%;
-            height: 24px;
-            background-color: #1e293b;
-            border-radius: 12px;
+            height: 20px;
+            background-color: #111;
+            border-radius: 4px;
             overflow: hidden;
             display: flex;
+            border: 1px solid #444;
         }
 
-        .progress-bar {
+        .vs-bar {
             height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.85rem;
-            font-weight: 800;
-            color: #0c192c;
-            transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .progress-gamst { background-color: #eab308; }
-        .progress-hmb { background-color: #f43f5e; }
-
-        /* 1:1 토론 매치업 매트릭스 */
-        .matchup-grid {
-            display: grid;
-            grid-template-columns: 1fr 120px 1fr;
-            gap: 20px;
-            align-items: center;
-            background-color: #112240;
-            border: 1px solid #1e3a8a;
-            border-radius: 16px;
-            padding: 40px;
-            margin-bottom: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-
-        /* 토론자 프로필 */
-        .debater {
-            text-align: center;
-        }
-
-        .debater-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background-color: #1e293b;
-            margin: 0 auto 20px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            border: 3px solid #334155;
-        }
-
-        .gamst .debater-avatar {
-            border-color: #eab308;
-            background: linear-gradient(135deg, #1e293b, #451a03);
-        }
-
-        .hmb .debater-avatar {
-            border-color: #d1232a;
-            background: linear-gradient(135deg, #1e293b, #1e1b4b);
-        }
-
-        .debater-name {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .debater-title {
-            font-size: 0.9rem;
-            color: #38bdf8;
-            font-weight: 600;
-            text-transform: uppercase;
-            margin-bottom: 15px;
-        }
-
-        .quote-box {
-            background-color: rgba(15, 23, 42, 0.6);
-            border-radius: 8px;
-            padding: 15px;
-            font-size: 1rem;
-            line-height: 1.5;
-            color: #cbd5e1;
-            text-align: left;
-            border-left: 4px solid #475569;
-        }
-
-        .gamst .quote-box { border-left-color: #eab308; }
-        .hmb .quote-box { border-left-color: #d1232a; }
-
-        /* VS 영역 */
-        .vs-zone {
-            text-align: center;
-        }
-
-        .vs-circle {
-            width: 70px;
-            height: 70px;
-            background-color: #d1232a;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 0.8rem;
             font-weight: 900;
-            font-size: 1.5rem;
-            margin: 0 auto;
-            box-shadow: 0 0 20px rgba(209, 35, 42, 0.5);
+            color: #000000;
+            transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* 실시간 토론 참여/댓글 섹션 */
-        .chat-section {
-            background-color: #112240;
-            border: 1px solid #233554;
-            border-radius: 16px;
-            padding: 30px;
-        }
+        .bar-gamst { background: linear-gradient(90deg, #f39c12, #f1c40f); }
+        .bar-hmb { background: linear-gradient(90deg, #e74c3c, #c0392b); }
 
-        .chat-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 20px;
+        /* ⚔️ 좌우 50:50 배틀 아레나 레이아웃 */
+        .battle-arena {
+            flex: 1;
             display: flex;
-            justify-content: space-between;
+            width: 100%;
+            position: relative;
+        }
+
+        /* 정중앙 스플릿 선 및 VS 마크 */
+        .arena-divider {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, #f1c40f 0%, #e74c3c 100%);
+            z-index: 5;
+            transform: translateX(-50%);
+        }
+
+        .arena-vs-tag {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            background: #111;
+            color: #fff;
+            border: 3px solid #fff;
+            font-size: 1.5rem;
+            font-weight: 900;
+            padding: 5px 15px;
+            z-index: 6;
+            box-shadow: 0 0 15px rgba(255,255,255,0.2);
+        }
+
+        /* 개별 캠프(진영) 설정 */
+        .camp {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 40px;
+            position: relative;
+            height: calc(100vh - 120px); /* 전체 화면에서 상단 바 제외 */
+        }
+
+        /* 진영별 고유 테마 분위기 설정 */
+        .camp-gamst {
+            background: linear-gradient(135deg, rgba(20, 15, 5, 0.95), rgba(5, 5, 5, 0.98));
+        }
+
+        .camp-hmb {
+            background: linear-gradient(135deg, rgba(20, 5, 5, 0.95), rgba(5, 5, 5, 0.98));
+        }
+
+        /* 진영 프로필 헤더 */
+        .camp-hero {
+            display: flex;
             align-items: center;
+            gap: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
         }
 
-        .chat-count {
-            font-size: 0.9rem;
-            color: #94a3b8;
-            font-weight: 400;
+        .camp-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            border: 2px solid;
         }
 
-        .chat-box {
-            max-height: 350px;
+        .camp-gamst .camp-avatar { border-color: #f1c40f; background: #e67e22; }
+        .camp-hmb .camp-avatar { border-color: #e74c3c; background: #962d22; }
+
+        .camp-info h2 {
+            font-size: 1.4rem;
+            font-weight: 900;
+            margin-bottom: 4px;
+        }
+
+        .camp-info p {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+        }
+
+        /* 💬 진영별 피드 (여기에 각자 글이 싸움하듯 올라옴) */
+        .battle-feed {
+            flex: 1;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            margin-bottom: 25px;
+            gap: 12px;
             padding-right: 10px;
+            margin-bottom: 20px;
         }
 
-        /* 스크롤바 디자인 */
-        .chat-box::-webkit-scrollbar { width: 6px; }
-        .chat-box::-webkit-scrollbar-track { background: #0c192c; }
-        .chat-box::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        .battle-feed::-webkit-scrollbar { width: 4px; }
+        .battle-feed::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
 
-        .chat-message {
-            background-color: #1e293b;
-            padding: 15px;
-            border-radius: 8px;
-            animation: fadeInUp 0.4s ease-out;
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .chat-meta {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 6px;
-            font-size: 0.85rem;
-        }
-
-        .user-name {
-            font-weight: 700;
-        }
-
-        .user-pick.pick-gamst { color: #eab308; }
-        .user-pick.pick-hmb { color: #f43f5e; }
-
-        .message-text {
+        /* 한 줄 평 카드 */
+        .combat-card {
+            padding: 14px 16px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid;
             font-size: 0.95rem;
-            color: #e2e8f0;
             line-height: 1.4;
+            animation: dropIn 0.3s ease-out;
         }
 
-        /* 입력 폼 */
-        .input-group {
-            display: flex;
-            gap: 10px;
+        @keyframes dropIn {
+            from { opacity: 0; transform: scale(0.98) translateY(-5px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        .select-pick {
-            background-color: #1e293b;
-            color: white;
-            border: 1px solid #334155;
-            padding: 0 15px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            outline: none;
-        }
+        .camp-gamst .combat-card { border-left-color: #f1c40f; border-right: 1px solid rgba(241, 196, 15, 0.1); }
+        .camp-hmb .combat-card { border-left-color: #e74c3c; border-right: 1px solid rgba(231, 76, 60, 0.1); }
 
-        .chat-input {
-            flex: 1;
-            background-color: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 8px;
-            padding: 14px 20px;
-            color: white;
-            font-size: 1rem;
-            outline: none;
-        }
-
-        .chat-input:focus {
-            border-color: #38bdf8;
-        }
-
-        .submit-btn {
-            background-color: #38bdf8;
-            color: #0c192c;
-            border: none;
-            padding: 0 24px;
-            border-radius: 8px;
+        .card-meta {
+            font-size: 0.8rem;
             font-weight: 700;
-            font-size: 1rem;
+            color: #7f8c8d;
+            margin-bottom: 4px;
+        }
+
+        /* ⌨️ 진영별 독립 입력 폼 */
+        .combat-input-zone {
+            display: flex;
+            gap: 8px;
+            background: rgba(0,0,0,0.4);
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .combat-input {
+            flex: 1;
+            background: #000000;
+            border: 1px solid #333;
+            border-radius: 2px;
+            padding: 12px 16px;
+            color: white;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .camp-gamst .combat-input:focus { border-color: #f1c40f; }
+        .camp-hmb .combat-input:focus { border-color: #e74c3c; }
+
+        .combat-btn {
+            border: none;
+            padding: 0 20px;
+            font-weight: 900;
+            font-size: 0.9rem;
             cursor: pointer;
-            transition: background-color 0.2s;
+            border-radius: 2px;
+            text-transform: uppercase;
         }
 
-        .submit-btn:hover {
-            background-color: #7dd3fc;
-        }
+        .camp-gamst .combat-btn { background-color: #f1c40f; color: #000; }
+        .camp-hmb .combat-btn { background-color: #e74c3c; color: #fff; }
 
-        /* 반응형 모바일 대응 */
-        @media (max-width: 900px) {
-            .matchup-grid {
-                grid-template-columns: 1fr;
-                padding: 24px;
-                gap: 30px;
-            }
-            .vs-zone {
-                order: -1;
-                padding: 10px 0;
-                border-bottom: 1px solid #233554;
-            }
-            .debate-header h1 { font-size: 1.8rem; }
-            .input-group { flex-direction: column; }
-            .select-pick, .submit-btn { padding: 14px; }
+        /* 반응형 레이아웃 (모바일에서는 위아래 스플릿으로 자동 전환) */
+        @media (max-width: 850px) {
+            body { overflow-y: auto; }
+            .battle-arena { flex-direction: column; }
+            .camp { height: 450px; padding: 20px; }
+            .arena-divider { left: 0; right: 0; top: 50%; width: 100%; height: 2px; transform: translateY(-50%); }
+            .arena-vs-tag { top: 50%; left: 50%; }
         }
     </style>
 </head>
 <body>
 
-    <!-- 상단 네비게이션 -->
+    <!-- 상단 매치 레이더 내비게이션 -->
     <nav>
-        <a href="index.html" class="back-btn">← 대문으로 돌아가기</a>
-        <div class="live-badge">LIVE DEBATE</div>
+        <a href="index.html" class="back-btn">← 대문 탈출</a>
+        <div class="battle-title">SQUAD CONFLICT ARENA</div>
+        <div class="live-status">PHASE 1 - LIVE</div>
     </nav>
 
-    <div class="container">
-        <!-- 상단 헤더 -->
-        <header class="debate-header">
-            <h1>끝장 라이브 토론</h1>
-            <p>축구팬들의 민심 대변인 vs 대한민국 국가대표팀 사령탑</p>
-        </header>
+    <!-- 실시간 스코어 중계현황판 -->
+    <section class="scoreboard">
+        <div class="score-header">
+            <span class="gamst-team-text">GAMST SQUAD (<span id="scoreGamst">1,240</span>)</span>
+            <span class="hmb-team-text">HMB TEAM (<span id="scoreHmb">980</span>)</span>
+        </div>
+        <div class="vs-bar-wrapper">
+            <div id="barGamst" class="vs-bar bar-gamst" style="width: 56%">56%</div>
+            <div id="barHmb" class="vs-bar bar-hmb" style="width: 44%">44%</div>
+        </div>
+    </section>
 
-        <!-- 📊 실시간 지지율 투표 현황 라이브 스코어 보드 -->
-        <section class="poll-container">
-            <div class="poll-header">
-                <span class="gamst-color">감스트 지지율 (<span id="countGamst">2054</span>표)</span>
-                <span class="hmb-color">홍명보 지지율 (<span id="countHmb">1358</span>표)</span>
-            </div>
-            <div class="progress-bar-wrapper">
-                <div id="barGamst" class="progress-bar progress-gamst" style="width: 60%">60%</div>
+    <!-- 배틀그라운드 스플릿 아레나 구역 -->
+    <div class="battle-arena">
+        
+        <!-- 중앙 데코레이션 가름선 및 타이틀 -->
+        <div class="arena-divider"></div>
+        <div class="arena-vs-tag">VS</div>
+
+        <!-- 💥 왼쪽 진영 : 감스트 스쿼드 (팬 민심 캠프) -->
+        <section class="camp camp-gamst">
+            <div class="camp-hero">
+                <div class="camp-avatar">🎙️</div>
+                <div class="camp-info">
+                    <h2>GAMST SQUAD</h2>
+                    <p>축구팬들의 억하심정과 절차적 정의를 촉구하는 연대</p>
+                </div>
+
 
 
