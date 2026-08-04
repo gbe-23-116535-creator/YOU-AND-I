@@ -554,3 +554,594 @@ background:#ffb300;
 
 </body>
 </html>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>Earth Center</title>
+
+<style>
+
+body{
+margin:0;
+height:100vh;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+background:#071018;
+
+font-family:sans-serif;
+}
+
+
+button{
+
+font-size:40px;
+
+padding:25px 70px;
+
+border-radius:30px;
+
+border:0;
+
+background:#ff9800;
+
+color:white;
+
+box-shadow:
+0 0 40px orange;
+
+cursor:pointer;
+
+}
+
+button:hover{
+
+transform:scale(1.1);
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<button onclick="location.href='earth.html'">
+
+🌎 지진
+
+</button>
+
+
+</body>
+</html>
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Earthquake Map</title>
+
+
+<style>
+
+
+body{
+
+margin:0;
+
+overflow:hidden;
+
+background:#cfd5d8;
+
+}
+
+
+
+/* 지도 */
+
+#map{
+
+width:100vw;
+
+height:100vh;
+
+
+background-image:
+
+url("https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Equirectangular_projection_SW.jpg/1280px-Equirectangular_projection_SW.jpg");
+
+
+background-size:cover;
+
+filter:grayscale(80%);
+
+
+}
+
+
+
+/* 판 경계 느낌 */
+
+.line{
+
+position:absolute;
+
+height:5px;
+
+background:red;
+
+opacity:.8;
+
+border-radius:20px;
+
+}
+
+
+
+.l1{
+
+width:700px;
+
+top:45%;
+
+left:10%;
+
+transform:rotate(-10deg);
+
+}
+
+
+.l2{
+
+width:600px;
+
+top:55%;
+
+left:40%;
+
+transform:rotate(20deg);
+
+}
+
+
+.l3{
+
+width:500px;
+
+top:35%;
+
+right:5%;
+
+transform:rotate(-15deg);
+
+}
+
+
+
+
+/* 지진 */
+
+.quake{
+
+position:absolute;
+
+width:18px;
+
+height:18px;
+
+background:#ff9800;
+
+border-radius:50%;
+
+box-shadow:
+
+0 0 15px orange,
+
+0 0 30px orange;
+
+
+animation:pulse 1.5s infinite;
+
+}
+
+
+
+@keyframes pulse{
+
+
+50%{
+
+transform:scale(2);
+
+opacity:.4;
+
+}
+
+}
+
+
+
+/* 제목 */
+
+.title{
+
+position:absolute;
+
+top:20px;
+
+left:30px;
+
+font-size:35px;
+
+font-weight:bold;
+
+color:white;
+
+text-shadow:2px 2px 5px black;
+
+}
+
+
+
+/* 뒤로 */
+
+.back{
+
+position:absolute;
+
+bottom:30px;
+
+left:30px;
+
+padding:15px 30px;
+
+font-size:25px;
+
+border:0;
+
+border-radius:20px;
+
+background:#333;
+
+color:white;
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div id="map"></div>
+
+
+<div class="title">
+🌎 실시간 지진 지도
+</div>
+
+
+
+<!-- 판 경계 -->
+
+<div class="line l1"></div>
+<div class="line l2"></div>
+<div class="line l3"></div>
+
+
+
+<!-- 지진 점 -->
+
+<div class="quake"
+style="left:35%;top:42%">
+</div>
+
+
+<div class="quake"
+style="left:60%;top:38%">
+</div>
+
+
+<div class="quake"
+style="left:75%;top:55%">
+</div>
+
+
+<div class="quake"
+style="left:48%;top:60%">
+</div>
+
+
+<div class="quake"
+style="left:20%;top:50%">
+</div>
+
+
+
+
+<button class="back"
+onclick="location.href='index.html'">
+
+← 돌아가기
+
+</button>
+
+
+</body>
+
+</html>
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Earthquake Map</title>
+
+
+<style>
+
+
+body{
+
+margin:0;
+
+overflow:hidden;
+
+background:#cfd5d8;
+
+}
+
+
+
+/* 지도 */
+
+#map{
+
+width:100vw;
+
+height:100vh;
+
+
+background-image:
+
+url("https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Equirectangular_projection_SW.jpg/1280px-Equirectangular_projection_SW.jpg");
+
+
+background-size:cover;
+
+filter:grayscale(80%);
+
+
+}
+
+
+
+/* 판 경계 느낌 */
+
+.line{
+
+position:absolute;
+
+height:5px;
+
+background:red;
+
+opacity:.8;
+
+border-radius:20px;
+
+}
+
+
+
+.l1{
+
+width:700px;
+
+top:45%;
+
+left:10%;
+
+transform:rotate(-10deg);
+
+}
+
+
+.l2{
+
+width:600px;
+
+top:55%;
+
+left:40%;
+
+transform:rotate(20deg);
+
+}
+
+
+.l3{
+
+width:500px;
+
+top:35%;
+
+right:5%;
+
+transform:rotate(-15deg);
+
+}
+
+
+
+
+/* 지진 */
+
+.quake{
+
+position:absolute;
+
+width:18px;
+
+height:18px;
+
+background:#ff9800;
+
+border-radius:50%;
+
+box-shadow:
+
+0 0 15px orange,
+
+0 0 30px orange;
+
+
+animation:pulse 1.5s infinite;
+
+}
+
+
+
+@keyframes pulse{
+
+
+50%{
+
+transform:scale(2);
+
+opacity:.4;
+
+}
+
+}
+
+
+
+/* 제목 */
+
+.title{
+
+position:absolute;
+
+top:20px;
+
+left:30px;
+
+font-size:35px;
+
+font-weight:bold;
+
+color:white;
+
+text-shadow:2px 2px 5px black;
+
+}
+
+
+
+/* 뒤로 */
+
+.back{
+
+position:absolute;
+
+bottom:30px;
+
+left:30px;
+
+padding:15px 30px;
+
+font-size:25px;
+
+border:0;
+
+border-radius:20px;
+
+background:#333;
+
+color:white;
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div id="map"></div>
+
+
+<div class="title">
+🌎 실시간 지진 지도
+</div>
+
+
+
+<!-- 판 경계 -->
+
+<div class="line l1"></div>
+<div class="line l2"></div>
+<div class="line l3"></div>
+
+
+
+<!-- 지진 점 -->
+
+<div class="quake"
+style="left:35%;top:42%">
+</div>
+
+
+<div class="quake"
+style="left:60%;top:38%">
+</div>
+
+
+<div class="quake"
+style="left:75%;top:55%">
+</div>
+
+
+<div class="quake"
+style="left:48%;top:60%">
+</div>
+
+
+<div class="quake"
+style="left:20%;top:50%">
+</div>
+
+
+
+
+<button class="back"
+onclick="location.href='index.html'">
+
+← 돌아가기
+
+</button>
+
+
+</body>
+
+</html>
