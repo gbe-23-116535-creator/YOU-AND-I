@@ -1,315 +1,394 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SQUAD SHOWDOWN: 감스트 vs 홍명보</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Pretendard', -apple-system, sans-serif;
-        }
+<meta charset="UTF-8">
+<title>SQUAD SHOWDOWN</title>
 
-        body {
-            background-color: #050b14;
-            color: #ffffff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+<style>
 
-        /* 상단 UI */
-        nav {
-            width: 100%;
-            padding: 12px 30px;
-            background: #000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 10;
-            border-bottom: 2px solid #f39c12;
-        }
+*{
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
 
-        .back-btn {
-            color: #94a3b8;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 700;
-        }
+body{
+margin:0;
+background:#050b14;
+color:white;
+overflow:hidden;
+}
 
-        .battle-title {
-            font-size: 1.4rem;
-            font-weight: 900;
-            letter-spacing: 2px;
-            color: #f39c12;
-            text-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
-        }
 
-        .live-status {
-            background-color: #e74c3c;
-            color: white;
-            padding: 4px 10px;
-            border-radius: 3px;
-            font-size: 0.75rem;
-            font-weight: 900;
-        }
+header{
+height:60px;
+background:#000;
+border-bottom:2px solid orange;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 30px;
+font-weight:bold;
+}
 
-        /* 📊 실시간 스코어보드 */
-        .scoreboard {
-            width: 100%;
-            max-width: 900px;
-            margin: 8px auto;
-            padding: 12px 20px;
-            background: rgba(17, 24, 39, 0.9);
-            border: 1px solid #2c3e50;
-            border-radius: 6px;
-        }
 
-        .score-header {
-            display: flex;
-            justify-content: space-between;
-            font-weight: 900;
-            font-size: 0.95rem;
-            margin-bottom: 6px;
-        }
+.title{
+color:#f39c12;
+font-size:22px;
+}
 
-        .gamst-team-text { color: #f1c40f; }
-        .hmb-team-text { color: #e74c3c; }
 
-        .vs-bar-wrapper {
-            width: 100%;
-            height: 18px;
-            background-color: #111;
-            border-radius: 4px;
-            overflow: hidden;
-            display: flex;
-            border: 1px solid #444;
-        }
+.vote{
+padding:15px;
+background:#111827;
+text-align:center;
+}
 
-        .vs-bar {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            font-weight: 900;
-            color: #000;
-            transition: width 0.2s ease-out;
-        }
 
-        .bar-gamst { background: linear-gradient(90deg, #f39c12, #f1c40f); }
-        .bar-hmb { background: linear-gradient(90deg, #e74c3c, #c0392b); }
+button{
+padding:12px 25px;
+border:0;
+font-weight:bold;
+cursor:pointer;
+border-radius:5px;
+font-size:16px;
+}
 
-        /* 🎮 메인 플레이 아레나 */
-        .main-arena {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            padding: 0 20px;
-            gap: 15px;
-        }
 
-        .game-zone {
-            width: 100%;
-            max-width: 1160px;
-            margin: 0 auto;
-            position: relative;
-        }
+.gamst{
+background:#f1c40f;
+}
 
-        canvas {
-            background-color: #0b1322;
-            border: 2px solid #1e3a8a;
-            border-radius: 8px;
-            display: block;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            width: 100%;
-            height: 280px;
-        }
 
-        .game-instruction {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.8);
-            padding: 6px 16px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            color: #fff;
-            pointer-events: none;
-            text-align: center;
-            border: 1px solid #f39c12;
-            word-break: keep-all;
-        }
+.hmb{
+background:#e74c3c;
+color:white;
+}
 
-        /* ⚔️ 하단 좌우 스플릿 입력 구역 */
-        .battle-columns {
-            display: flex;
-            gap: 20px;
-            flex: 1;
-            margin-bottom: 15px;
-            height: calc(100vh - 490px);
-        }
 
-        .camp {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: rgba(17, 24, 39, 0.6);
-            border: 2px solid rgba(255,255,255,0.05);
-            border-radius: 8px;
-            padding: 15px;
-            transition: border-color 0.2s;
-        }
+.bar{
+height:25px;
+background:#222;
+display:flex;
+margin-top:15px;
+}
 
-        /* 현재 조작 중인 진영 강조 효과 */
-        .camp.active-control-gamst { border-color: #f1c40f; box-shadow: 0 0 10px rgba(241, 196, 15, 0.2); }
-        .camp.active-control-hmb { border-color: #e74c3c; box-shadow: 0 0 10px rgba(231, 76, 60, 0.2); }
 
-        .camp-header {
-            font-weight: 900;
-            font-size: 1.1rem;
-            padding-bottom: 8px;
-            margin-bottom: 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            justify-content: space-between;
-        }
+#gamstBar{
+background:#f1c40f;
+width:50%;
+}
 
-        .control-indicator {
-            font-size: 0.75rem;
-            padding: 2px 6px;
-            border-radius: 3px;
-            background: #2c3e50;
-            color: #fff;
-        }
 
-        .camp-gamst .camp-header { color: #f1c40f; }
-        .camp-hmb .camp-header { color: #e74c3c; }
+#hmbBar{
+background:#e74c3c;
+width:50%;
+}
 
-        .battle-feed {
-            flex: 1;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 10px;
-            padding-right: 5px;
-        }
 
-        .battle-feed::-webkit-scrollbar { width: 4px; }
-        .battle-feed::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+canvas{
 
-        .combat-card {
-            padding: 10px;
-            border-radius: 4px;
-            background: rgba(255, 255, 255, 0.02);
-            font-size: 0.85rem;
-            line-height: 1.4;
-            border-left: 3px solid;
-        }
+display:block;
+margin:15px auto;
+background:#0b1322;
+border:2px solid #1e3a8a;
 
-        .camp-gamst .combat-card { border-left-color: #f1c40f; }
-        .camp-hmb .combat-card { border-left-color: #e74c3c; }
+}
 
-        .card-meta { font-size: 0.75rem; color: #7f8c8d; margin-bottom: 2px; }
 
-        .combat-input-zone {
-            display: flex;
-            gap: 6px;
-        }
 
-        .combat-input {
-            flex: 1;
-            background: #000;
-            border: 1px solid #333;
-            border-radius: 4px;
-            padding: 10px;
-            color: white;
-            font-size: 0.85rem;
-            outline: none;
-        }
+.info{
 
-        .camp-gamst .combat-input:focus { border-color: #f1c40f; }
-        .camp-hmb .combat-input:focus { border-color: #e74c3c; }
+display:flex;
+justify-content:center;
+gap:40px;
+font-size:20px;
 
-        .combat-btn {
-            border: none;
-            padding: 0 15px;
-            font-weight: 900;
-            font-size: 0.85rem;
-            cursor: pointer;
-            border-radius: 4px;
-        }
+}
 
-        .camp-gamst .combat-btn { background-color: #f1c40f; color: #000; }
-        .camp-hmb .combat-btn { background-color: #e74c3c; color: #fff; }
-    </style>
+</style>
+
 </head>
+
+
 <body>
 
-    <!-- 내비게이션 바 -->
-    <nav>
-        <a href="index.html" class="back-btn">← 대문으로 탈출</a>
-        <div class="battle-title">BATTLEGROUNDS: EQUAL CONTROL</div>
-        <div class="live-status">MATCH IN PROGRESS</div>
-    </nav>
 
-    <!-- 실시간 스코어보드 -->
-    <section class="scoreboard">
-        <div class="score-header">
-            <span class="gamst-team-text">GAMST SQUAD (<span id="scoreGamst">1,240</span>)</span>
-            <span class="hmb-team-text">HMB DEFENDERS (<span id="scoreHmb">980</span>)</span>
-        </div>
-        <div class="vs-bar-wrapper">
-            <div id="barGamst" class="vs-bar bar-gamst" style="width: 56%">56%</div>
-            <div id="barHmb" class="vs-bar bar-hmb" style="width: 44%">44%</div>
-        </div>
-    </section>
+<header>
 
-    <div class="main-arena">
-        <!-- 🎮 1. 실시간 배그 총격전 게임 스크린 -->
-        <div class="game-zone">
-            <div class="game-instruction">
-                🎮 <b>조작 통일 완료</b>: 조작할 진영창을 클릭한 후 <b>방향키(이동)</b> 및 <b>Spacebar(발사)</b>를 사용하세요!
-            </div>
-            <canvas id="battleCanvas" width="1160" height="280"></canvas>
-        </div>
+<div>← 대문</div>
 
-        <!-- 💬 2. 하단 진영별 실시간 입력 구역 -->
-        <div class="battle-columns">
-            <!-- 감스트 진영 -->
-            <section class="camp camp-gamst active-control-gamst" id="campGamst" onclick="switchControl('gamst')">
-                <div class="camp-header">
-                    <span>🎙️ GAMST SQUAD FEED</span>
-                    <span class="control-indicator" id="statusGamst">조작 중 🔥</span>
-                </div>
-                <div class="battle-feed" id="feedGamst">
-                    <div class="combat-card">
-                        <div class="card-meta">PLAYER_8821</div>
-                        <div>절차적 타당성이 무너진 대표팀 행정, 정면 돌파로 뜯어고쳐야 합니다! 화력 지원합니다!</div>
-                    </div>
-                </div>
-                <div class="combat-input-zone">
-                    <input type="text" class="combat-input" id="inputGamst" placeholder="글 입력 시 감스트 지지율 상승..." onfocus="switchControl('gamst')" onkeydown="if(event.key === 'Enter') fireSquad('gamst')">
-                    <button class="combat-btn" onclick="fireSquad('gamst')">FIRE</button>
-                </div>
-            </section>
+<div class="title">
+SQUAD SHOWDOWN
+</div>
 
-            <!-- 홍명보 진영 -->
-            <section class="camp camp-hmb" id="campHmb" onclick="switchControl('hmb')">
-                <div class="camp-header">
-                    <span>👔 HMB DEFENDERS FEED</span>
-                    <span class="control-indicator" id="statusHmb" style="background:none; color:#555;">대기</span>
-                </div>
-                <div class="battle-feed" id="feedHmb">
-                    <div class="combat-card">
-                        <div class="card-meta">COMMANDER_K</div>
-                        <div>지금 흔들면 월드컵 아시아 예선 다 망합니다. 감독 배수진 쳤으니 결과로 증명하게 냅둡시다.</div>
-                    </div>
-                </div>
-                <div class="combat-input-zone">
+<div>
+LIVE
+</div>
+
+</header>
+
+
+
+<div class="vote">
+
+
+<h2>
+⚔ 진영 선택
+</h2>
+
+
+<button class="gamst" onclick="vote('gamst')">
+감스트 팀
+</button>
+
+
+<button class="hmb" onclick="vote('hmb')">
+홍명보 팀
+</button>
+
+
+
+<div class="info">
+
+<div>
+감스트 :
+<span id="gv">
+0
+</span>
+표
+</div>
+
+
+<div>
+홍명보 :
+<span id="hv">
+0
+</span>
+표
+</div>
+
+
+</div>
+
+
+
+<div class="bar">
+
+<div id="gamstBar"></div>
+
+<div id="hmbBar"></div>
+
+</div>
+
+
+</div>
+
+
+
+
+<canvas id="game"
+width="1000"
+height="400">
+
+</canvas>
+
+
+
+<script>
+
+
+let gamstVote=0;
+
+let hmbVote=0;
+
+
+let team=null;
+
+
+
+let player=null;
+
+
+
+function vote(t){
+
+
+if(team){
+alert("이미 선택했습니다");
+return;
+}
+
+
+team=t;
+
+
+
+if(t=="gamst"){
+
+gamstVote++;
+
+player={
+
+x:100,
+
+y:200,
+
+color:"#f1c40f",
+
+hp:100
+
+};
+
+
+}else{
+
+
+hmbVote++;
+
+
+player={
+
+x:900,
+
+y:200,
+
+color:"#e74c3c",
+
+hp:100
+
+};
+
+
+}
+
+
+updateVote();
+
+
+}
+
+
+
+function updateVote(){
+
+
+let total=gamstVote+hmbVote;
+
+
+let g=50;
+
+
+if(total){
+
+g=gamstVote/total*100;
+
+}
+
+
+document.getElementById("gv").innerHTML=gamstVote;
+
+document.getElementById("hv").innerHTML=hmbVote;
+
+
+document.getElementById("gamstBar").style.width=g+"%";
+
+document.getElementById("hmbBar").style.width=(100-g)+"%";
+
+
+}
+
+
+
+const canvas=document.getElementById("game");
+
+const ctx=canvas.getContext("2d");
+
+
+
+let keys={};
+
+
+
+document.addEventListener("keydown",e=>{
+
+keys[e.key]=true;
+
+});
+
+
+document.addEventListener("keyup",e=>{
+
+keys[e.key]=false;
+
+});
+
+
+
+function loop(){
+
+
+ctx.clearRect(
+0,
+0,
+1000,
+400
+);
+
+
+
+if(player){
+
+
+if(keys["ArrowLeft"])
+player.x-=5;
+
+
+if(keys["ArrowRight"])
+player.x+=5;
+
+
+if(keys["ArrowUp"])
+player.y-=5;
+
+
+if(keys["ArrowDown"])
+player.y+=5;
+
+
+
+ctx.fillStyle=player.color;
+
+
+ctx.beginPath();
+
+
+ctx.arc(
+player.x,
+player.y,
+20,
+0,
+Math.PI*2
+);
+
+
+ctx.fill();
+
+
+}
+
+
+requestAnimationFrame(loop);
+
+
+}
+
+
+loop();
+
+
+
+</script>
+
+
+</body>
+</html>
