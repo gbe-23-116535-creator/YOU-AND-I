@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Earthquake Earth</title>
+
+<style>
+body {
+    margin:0;
+    overflow:hidden;
+    background:#05080d;
+    font-family:Arial;
+}
+
+/* 우주 배경 */
+.space {
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:
+    radial-gradient(circle at center,#24313b,#05080d 70%);
+}
+
+/* 지구 */
+.earth {
+    position:absolute;
+    width:600px;
+    height:600px;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    overflow:hidden;
+
+    background:
+    linear-gradient(90deg,
+    rgba(255,255,255,.08),
+    transparent),
+    url("https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Earth_map.jpg/1024px-Earth_map.jpg");
+
+    background-size:cover;
+
+    box-shadow:
+    inset -80px 0 120px #000,
+    0 0 80px #4d6675;
+
+    animation:rotate 40s linear infinite;
+}
+
+
+@keyframes rotate{
+from{
+ background-position:0 center;
+}
+to{
+ background-position:1024px center;
+}
+}
+
+
+/* 판 경계 */
+.plate {
+    position:absolute;
+    inset:0;
+
+    background:
+    url("https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Plate_tectonics_map.gif/800px-Plate_tectonics_map.gif");
+
+    background-size:cover;
+    opacity:.45;
+
+    mix-blend-mode:screen;
+}
+
+
+/* 지진 점 */
+.quake{
+    position:absolute;
+    width:14px;
+    height:14px;
+    background:#ff9d00;
+    border-radius:50%;
+    box-shadow:
+    0 0 15px orange,
+    0 0 30px orange;
+
+    animation:pulse 1.5s infinite;
+}
+
+
+@keyframes pulse{
+0%{
+ transform:scale(1);
+ opacity:1;
+}
+50%{
+ transform:scale(2);
+ opacity:.4;
+}
+100%{
+ transform:scale(1);
+ opacity:1;
+}
+}
+
+
+/* 별 */
+.star{
+position:absolute;
+width:2px;
+height:2px;
+background:white;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="space"></div>
+
+<div class="earth">
+
+<div class="plate"></div>
+
+
+<div class="quake" style="left:35%;top:38%"></div>
+<div class="quake" style="left:55%;top:48%"></div>
+<div class="quake" style="left:72%;top:35%"></div>
+<div class="quake" style="left:25%;top:55%"></div>
+<div class="quake" style="left:63%;top:65%"></div>
+
+
+</div>
+
+
+<script>
+// 별 만들기
+for(let i=0;i<200;i++){
+
+let s=document.createElement("div");
+s.className="star";
+
+s.style.left=Math.random()*100+"%";
+s.style.top=Math.random()*100+"%";
+
+s.style.opacity=Math.random();
+
+document.body.appendChild(s);
+
+}
+
+</script>
+
+
+</body>
+</html>
