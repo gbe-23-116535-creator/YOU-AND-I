@@ -411,4 +411,337 @@
 
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>우리나라 축구, 지금 괜찮은가?</title>
+    <style>
+        /* 기본 스타일 리셋 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+        }
+
+        html, body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* 1. 히어로 섹션 (대문) */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: radial-gradient(circle at center, #1e1b4b 0%, #0f172a 100%);
+            padding: 20px;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+            z-index: 10;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0) 60%, #0f172a 100%);
+            z-index: 2;
+        }
+
+        .hero .container {
+            position: relative;
+            z-index: 3;
+            max-width: 800px;
+        }
+
+        .badge {
+            display: inline-block;
+            background-color: #e11d48;
+            color: #ffffff;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            box-shadow: 0 0 20px rgba(225, 29, 72, 0.4);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            letter-spacing: -0.05em;
+        }
+
+        h1 span {
+            color: #38bdf8;
+            display: block;
+            margin-top: 8px;
+        }
+
+        .description {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            word-break: keep-all;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+
+        .btn-primary:hover {
+            background-color: #38bdf8;
+            color: #0f172a;
+            transform: translateY(-2px);
+        }
+
+        /* 2. 메인 본문 레이아웃 (기본 상태: 숨김/아래에 대기) */
+        .main-content {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 활성화되었을 때 나타나는 스타일 */
+        .main-content.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: #94a3b8;
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        /* 핵심 이슈 카드 섹션 */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 32px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #38bdf8;
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #f1f5f9;
+        }
+
+        .card-text {
+            color: #94a3b8;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        /* 찬반 투표 섹션 */
+        .poll-section {
+            background-color: #111827;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 600px;
+            margin: 0 auto;
+            border: 1px solid #1f2937;
+        }
+
+        .poll-question {
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .poll-options {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .poll-btn {
+            background: #1f2937;
+            border: 2px solid #374151;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .poll-btn:hover {
+            background: #2563eb;
+            border-color: #3b82f6;
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            .description { font-size: 1rem; }
+            .btn { width: 100%; }
+            .btn-group { width: 100%; max-width: 300px; margin: 0 auto; }
+            .section { padding: 50px 0; }
+            .section-title { font-size: 1.8rem; }
+            .poll-section { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. 히어로 섹션 (대문) -->
+    <section class="hero" id="heroSection">
+        <div class="container">
+            <div class="badge">Special Report</div>
+            <h1>우리나라 축구,<br><span>지금 괜찮은가?</span></h1>
+            <p class="description">
+                화려한 유럽파의 활약 뒤에 숨겨진 대한민국 축구의 진짜 모습.<br>
+                위기와 기회의 갈림길에 선 우리 축구의 냉정한 현실을 진단합니다.
+            </p>
+            <div class="btn-group">
+                <!-- 클릭 시 자바스크립트 함수 실행 -->
+                <button class="btn btn-primary" onclick="enterMain()">냉정한 분석 보기</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. 메인 본문 콘텐츠 영역 (초기 상태 숨김) -->
+    <main class="main-content" id="mainContent">
+        
+        <!-- 핵심 이슈 섹션 -->
+        <section class="section">
+            <h2 class="section-title">우리가 마주한 3대 핵심 쟁점</h2>
+            <p class="section-subtitle">대한민국 축구가 안고 있는 구조적 문제를 짚어봅니다.</p>
+            
+            <div class="grid-container">
+                <div class="card">
+                    <div class="card-icon">⚙️</div>
+                    <h3 class="card-title">행정 및 선임 논란</h3>
+                    <p class="card-text">국가대표팀 감독 선임 과정에서 불거진 절차적 정당성 논란과 대한축구협회의 시스템을 비판적으로 진단합니다.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">📈</div>
+                    <h3 class="card-title">경기력과 전술 부재</h3>
+                    <p class="card-text">유럽파 개인 기량에 의존하는 단조로운 전술에서 벗어나, 대표팀만의 확고한 철학이 정립되어 있는지 분석합니다.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🌱</div>
+                    <h3 class="card-title">유소년 시스템과 K리그</h3>
+                    <p class="card-text">근본적인 해결책은 뿌리에 있습니다. 한국 축구의 근간이 되는 K리그의 발전과 유소년 육성 시스템을 점검합니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 팬들의 투표 섹션 -->
+        <section class="section" style="border-top: 1px solid #1e293b;">
+            <h2 class="section-title">팬들의 목소리</h2>
+            <p class="section-subtitle">현재 대한민국 축구의 행보에 대해 어떻게 생각하십니까?</p>
+            
+            <div class="poll-section">
+                <p class="poll-question">Q. 현재 국가대표팀과 축구협회의 운영 방향에 만족하십니까?</p>
+                <div class="poll-options">
+                    <button class="poll-btn" onclick="alert('투표해 주셔서 감사합니다!')">
+                        <span>👍 지금 방향이 맞다, 믿고 지켜봐야 한다</span>
+                        <span>→</span>
+                    </button>
+                    <button class="poll-btn" onclick="alert('투표해 주셔서 감사합니다!')">
+                        <span>👎 대대적인 인적·구조적 쇄신이 필요하다</span>
+                        <span>→</span>
+                    </button>
+                    <button class="poll-btn" onclick="alert('투표해 주셔서 감사합니다!')">
+                        <span>🤔 잘 모르겠다 / 중립</span>
+                        <span>→</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 3. 화면 전환 스크립트 -->
+    <script>
+        function enterMain() {
+            // 메인 콘텐츠 영역 활성화
+            const mainContent = document.getElementById('mainContent');
+            mainContent.classList.add('active');
+            
+            // 메인 콘텐츠 위치로 부드럽게 스크롤 이동
+            mainContent.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+
+</body>
+</html>
 
