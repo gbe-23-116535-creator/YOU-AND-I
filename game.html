@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQUAD SHOWDOWN: 감스트 vs 홍명보</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Pretendard', -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: #050b14;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* 상단 UI */
+        nav {
+            width: 100%;
+            padding: 12px 30px;
+            background: #000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            border-bottom: 2px solid #f39c12;
+        }
+
+        .back-btn {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .battle-title {
+            font-size: 1.4rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: #f39c12;
+            text-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+        }
+
+        .live-status {
+            background-color: #e74c3c;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: 900;
+        }
+
+        /* 📊 실시간 스코어보드 */
+        .scoreboard {
+            width: 100%;
+            max-width: 900px;
+            margin: 8px auto;
+            padding: 12px 20px;
+            background: rgba(17, 24, 39, 0.9);
+            border: 1px solid #2c3e50;
+            border-radius: 6px;
+        }
+
+        .score-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 900;
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+        }
+
+        .gamst-team-text { color: #f1c40f; }
+        .hmb-team-text { color: #e74c3c; }
+
+        .vs-bar-wrapper {
+            width: 100%;
+            height: 18px;
+            background-color: #111;
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            border: 1px solid #444;
+        }
+
+        .vs-bar {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 900;
+            color: #000;
+            transition: width 0.2s ease-out;
+        }
+
+        .bar-gamst { background: linear-gradient(90deg, #f39c12, #f1c40f); }
+        .bar-hmb { background: linear-gradient(90deg, #e74c3c, #c0392b); }
+
+        /* 🎮 메인 플레이 아레나 */
+        .main-arena {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            padding: 0 20px;
+            gap: 15px;
+        }
+
+        .game-zone {
+            width: 100%;
+            max-width: 1160px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        canvas {
+            background-color: #0b1322;
+            border: 2px solid #1e3a8a;
+            border-radius: 8px;
+            display: block;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            width: 100%;
+            height: 280px;
+        }
+
+        .game-instruction {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            padding: 6px 16px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: #fff;
+            pointer-events: none;
+            text-align: center;
+            border: 1px solid #f39c12;
+            word-break: keep-all;
+        }
+
+        /* ⚔️ 하단 좌우 스플릿 입력 구역 */
+        .battle-columns {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+            margin-bottom: 15px;
+            height: calc(100vh - 490px);
+        }
+
+        .camp {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(17, 24, 39, 0.6);
+            border: 2px solid rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 15px;
+            transition: border-color 0.2s;
+        }
+
+        /* 현재 조작 중인 진영 강조 효과 */
+        .camp.active-control-gamst { border-color: #f1c40f; box-shadow: 0 0 10px rgba(241, 196, 15, 0.2); }
+        .camp.active-control-hmb { border-color: #e74c3c; box-shadow: 0 0 10px rgba(231, 76, 60, 0.2); }
+
+        .camp-header {
+            font-weight: 900;
+            font-size: 1.1rem;
+            padding-bottom: 8px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .control-indicator {
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 3px;
+            background: #2c3e50;
+            color: #fff;
+        }
+
+        .camp-gamst .camp-header { color: #f1c40f; }
+        .camp-hmb .camp-header { color: #e74c3c; }
+
+        .battle-feed {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding-right: 5px;
+        }
+
+        .battle-feed::-webkit-scrollbar { width: 4px; }
+        .battle-feed::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+
+        .combat-card {
+            padding: 10px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.02);
+            font-size: 0.85rem;
+            line-height: 1.4;
+            border-left: 3px solid;
+        }
+
+        .camp-gamst .combat-card { border-left-color: #f1c40f; }
+        .camp-hmb .combat-card { border-left-color: #e74c3c; }
+
+        .card-meta { font-size: 0.75rem; color: #7f8c8d; margin-bottom: 2px; }
+
+        .combat-input-zone {
+            display: flex;
+            gap: 6px;
+        }
+
+        .combat-input {
+            flex: 1;
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 10px;
+            color: white;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .camp-gamst .combat-input:focus { border-color: #f1c40f; }
+        .camp-hmb .combat-input:focus { border-color: #e74c3c; }
+
+        .combat-btn {
+            border: none;
+            padding: 0 15px;
+            font-weight: 900;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .camp-gamst .combat-btn { background-color: #f1c40f; color: #000; }
+        .camp-hmb .combat-btn { background-color: #e74c3c; color: #fff; }
+    </style>
+</head>
+<body>
+
+    <!-- 내비게이션 바 -->
+    <nav>
+        <a href="index.html" class="back-btn">← 대문으로 탈출</a>
+        <div class="battle-title">BATTLEGROUNDS: EQUAL CONTROL</div>
+        <div class="live-status">MATCH IN PROGRESS</div>
+    </nav>
+
+    <!-- 실시간 스코어보드 -->
+    <section class="scoreboard">
+        <div class="score-header">
+            <span class="gamst-team-text">GAMST SQUAD (<span id="scoreGamst">1,240</span>)</span>
+            <span class="hmb-team-text">HMB DEFENDERS (<span id="scoreHmb">980</span>)</span>
+        </div>
+        <div class="vs-bar-wrapper">
+            <div id="barGamst" class="vs-bar bar-gamst" style="width: 56%">56%</div>
+            <div id="barHmb" class="vs-bar bar-hmb" style="width: 44%">44%</div>
+        </div>
+    </section>
+
+    <div class="main-arena">
+        <!-- 🎮 1. 실시간 배그 총격전 게임 스크린 -->
+        <div class="game-zone">
+            <div class="game-instruction">
+                🎮 <b>조작 통일 완료</b>: 조작할 진영창을 클릭한 후 <b>방향키(이동)</b> 및 <b>Spacebar(발사)</b>를 사용하세요!
+            </div>
+            <canvas id="battleCanvas" width="1160" height="280"></canvas>
+        </div>
+
+        <!-- 💬 2. 하단 진영별 실시간 입력 구역 -->
+        <div class="battle-columns">
+            <!-- 감스트 진영 -->
+            <section class="camp camp-gamst active-control-gamst" id="campGamst" onclick="switchControl('gamst')">
+                <div class="camp-header">
+                    <span>🎙️ GAMST SQUAD FEED</span>
+                    <span class="control-indicator" id="statusGamst">조작 중 🔥</span>
+                </div>
+                <div class="battle-feed" id="feedGamst">
+                    <div class="combat-card">
+                        <div class="card-meta">PLAYER_8821</div>
+                        <div>절차적 타당성이 무너진 대표팀 행정, 정면 돌파로 뜯어고쳐야 합니다! 화력 지원합니다!</div>
+                    </div>
+                </div>
+                <div class="combat-input-zone">
+                    <input type="text" class="combat-input" id="inputGamst" placeholder="글 입력 시 감스트 지지율 상승..." onfocus="switchControl('gamst')" onkeydown="if(event.key === 'Enter') fireSquad('gamst')">
+                    <button class="combat-btn" onclick="fireSquad('gamst')">FIRE</button>
+                </div>
+            </section>
+
+            <!-- 홍명보 진영 -->
+            <section class="camp camp-hmb" id="campHmb" onclick="switchControl('hmb')">
+                <div class="camp-header">
+                    <span>👔 HMB DEFENDERS FEED</span>
+                    <span class="control-indicator" id="statusHmb" style="background:none; color:#555;">대기</span>
+                </div>
+                <div class="battle-feed" id="feedHmb">
+                    <div class="combat-card">
+                        <div class="card-meta">COMMANDER_K</div>
+                        <div>지금 흔들면 월드컵 아시아 예선 다 망합니다. 감독 배수진 쳤으니 결과로 증명하게 냅둡시다.</div>
+                    </div>
+                </div>
+                <div class="combat-input-zone">
