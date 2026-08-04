@@ -330,6 +330,273 @@
                     <h2>GAMST SQUAD</h2>
                     <p>축구팬들의 억하심정과 절차적 정의를 촉구하는 연대</p>
                 </div>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>SQUAD SHOWDOWN</title>
+
+<style>
+body{
+    margin:0;
+    background:#050b14;
+    color:white;
+    font-family:Arial;
+    text-align:center;
+}
+
+#start,#select,#battle{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+}
+
+#select,#battle{
+    display:none;
+}
+
+h1{
+    font-size:50px;
+    color:#f39c12;
+}
+
+button{
+    padding:20px 50px;
+    margin:15px;
+    font-size:25px;
+    cursor:pointer;
+    border:none;
+    border-radius:10px;
+    font-weight:bold;
+}
+
+.startBtn{
+    background:#f39c12;
+}
+
+.gamstBtn{
+    background:#f1c40f;
+}
+
+.hmbBtn{
+    background:#e74c3c;
+    color:white;
+}
+
+canvas{
+    background:#111;
+    border:3px solid #3498db;
+}
+</style>
+
+</head>
+
+<body>
+
+
+<div id="start">
+
+<h1>
+SQUAD SHOWDOWN
+</h1>
+
+<h2>
+감스트 VS 홍명보
+</h2>
+
+<button class="startBtn" onclick="startGame()">
+게임 시작
+</button>
+
+</div>
+
+
+
+<div id="select">
+
+<h1>
+진영 선택
+</h1>
+
+<button class="gamstBtn" onclick="choose('감스트')">
+감스트 팀
+</button>
+
+<button class="hmbBtn" onclick="choose('홍명보')">
+홍명보 팀
+</button>
+
+</div>
+
+
+
+
+<div id="battle">
+
+<h1 id="team">
+</h1>
+
+
+<canvas id="canvas" width="900" height="500"></canvas>
+
+<p>
+방향키 이동
+</p>
+
+</div>
+
+
+
+
+<script>
+
+
+let canvas=document.getElementById("canvas");
+
+let ctx=canvas.getContext("2d");
+
+
+let player={
+
+x:450,
+y:250,
+color:"white"
+
+};
+
+
+let keys={};
+
+
+
+function startGame(){
+
+document.getElementById("start").style.display="none";
+
+document.getElementById("select").style.display="flex";
+
+}
+
+
+
+function choose(team){
+
+
+document.getElementById("select").style.display="none";
+
+document.getElementById("battle").style.display="flex";
+
+
+document.getElementById("team").innerHTML=
+team+" 전투 시작";
+
+
+if(team=="감스트"){
+
+player.color="#f1c40f";
+player.x=150;
+
+}
+
+else{
+
+player.color="#e74c3c";
+player.x=750;
+
+}
+
+
+draw();
+
+
+}
+
+
+
+
+document.addEventListener("keydown",function(e){
+
+keys[e.key]=true;
+
+});
+
+
+document.addEventListener("keyup",function(e){
+
+keys[e.key]=false;
+
+});
+
+
+
+
+
+function draw(){
+
+
+ctx.clearRect(0,0,900,500);
+
+
+
+if(keys["ArrowLeft"]){
+
+player.x-=5;
+
+}
+
+
+if(keys["ArrowRight"]){
+
+player.x+=5;
+
+}
+
+
+if(keys["ArrowUp"]){
+
+player.y-=5;
+
+}
+
+
+if(keys["ArrowDown"]){
+
+player.y+=5;
+
+}
+
+
+
+ctx.fillStyle=player.color;
+
+
+ctx.beginPath();
+
+ctx.arc(
+player.x,
+player.y,
+25,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+
+
+requestAnimationFrame(draw);
+
+
+}
+
+
+</script>
+
+
+</body>
+</html>
 
 
 
