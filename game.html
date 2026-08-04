@@ -529,3 +529,322 @@ ctx.fill();
 
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+
+<meta charset="UTF-8">
+
+<title>감스트 vs 홍명보 축구게임</title>
+
+
+<style>
+
+body{
+
+margin:0;
+overflow:hidden;
+background:#1b8f2c;
+font-family:sans-serif;
+
+}
+
+
+/* 점수 */
+
+#score{
+
+position:absolute;
+top:20px;
+width:100%;
+text-align:center;
+
+font-size:40px;
+color:white;
+
+text-shadow:2px 2px black;
+
+}
+
+
+/* 경기장 */
+
+#field{
+
+position:absolute;
+
+width:800px;
+height:450px;
+
+left:50%;
+top:50%;
+
+transform:translate(-50%,-50%);
+
+background:
+linear-gradient(#35b94a,#198b30);
+
+border:8px solid white;
+
+}
+
+
+/* 골대 */
+
+.goal{
+
+position:absolute;
+
+width:100px;
+height:180px;
+
+top:135px;
+
+border:5px solid white;
+
+}
+
+
+#leftGoal{
+
+left:-10px;
+
+}
+
+
+#rightGoal{
+
+right:-10px;
+
+}
+
+
+
+/* 선수 */
+
+.player{
+
+position:absolute;
+
+width:60px;
+height:60px;
+
+border-radius:50%;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+color:white;
+font-weight:bold;
+
+}
+
+
+#gam{
+
+background:#ff3b30;
+
+left:100px;
+top:195px;
+
+}
+
+
+#hong{
+
+background:#0066ff;
+
+right:100px;
+top:195px;
+
+}
+
+
+
+/* 공 */
+
+#ball{
+
+position:absolute;
+
+width:30px;
+height:30px;
+
+background:white;
+
+border-radius:50%;
+
+left:385px;
+top:210px;
+
+}
+
+
+/* 슛 버튼 */
+
+#shoot{
+
+position:absolute;
+
+bottom:30px;
+left:50%;
+
+transform:translateX(-50%);
+
+font-size:30px;
+
+padding:15px 50px;
+
+border-radius:20px;
+
+background:#ff9800;
+
+color:white;
+
+border:none;
+
+}
+
+
+</style>
+
+</head>
+
+
+
+<body>
+
+
+<div id="score">
+
+감스트 0 : 0 홍명보
+
+</div>
+
+
+<div id="field">
+
+
+<div class="goal" id="leftGoal"></div>
+
+<div class="goal" id="rightGoal"></div>
+
+
+<div class="player" id="gam">
+감스트
+</div>
+
+
+<div class="player" id="hong">
+홍명보
+</div>
+
+
+<div id="ball"></div>
+
+
+</div>
+
+
+<button id="shoot">
+⚽ 슛
+</button>
+
+
+
+<script>
+
+
+let gamScore=0;
+let hongScore=0;
+
+
+let ball=document.getElementById("ball");
+
+
+let gam=document.getElementById("gam");
+
+
+
+/* 감스트 움직임 */
+
+document.addEventListener(
+"keydown",
+function(e){
+
+
+let x=gam.offsetLeft;
+let y=gam.offsetTop;
+
+
+if(e.key=="ArrowUp")
+y-=20;
+
+
+if(e.key=="ArrowDown")
+y+=20;
+
+
+if(e.key=="ArrowLeft")
+x-=20;
+
+
+if(e.key=="ArrowRight")
+x+=20;
+
+
+gam.style.left=x+"px";
+gam.style.top=y+"px";
+
+
+});
+
+
+
+
+
+// 슛
+
+document.getElementById("shoot")
+.onclick=function(){
+
+
+let target=Math.random();
+
+
+if(target>0.5){
+
+hongScore++;
+
+alert("⚽ 감스트 골!");
+
+}
+
+else{
+
+gamScore++;
+
+alert("🧤 홍명보 선방!");
+
+}
+
+
+
+document.getElementById("score").innerHTML=
+
+"감스트 "+gamScore+
+" : "+
+hongScore+
+" 홍명보";
+
+
+};
+
+
+
+</script>
+
+
+</body>
+</html>
