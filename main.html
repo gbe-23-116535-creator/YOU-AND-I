@@ -3,103 +3,368 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>우리나라 축구, 지금 괜찮은가?</title>
+    <title>끝장 토론: 대한민국 축구의 운명</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
+        /* 기본 스타일 초기화 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: 'Pretendard', -apple-system, sans-serif;
+        }
+
+        body {
             background-color: #0c192c;
             color: #ffffff;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* 네비게이션 바 */
+        nav {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
             justify-content: space-between;
             align-items: center;
-            overflow: hidden;
-            background-image: linear-gradient(rgba(12, 25, 44, 0.85), rgba(12, 25, 44, 0.95)), url('https://unsplash.com');
-            background-size: cover;
-            background-position: center;
         }
-        header { padding-top: 40px; text-align: center; }
-        .tag {
-            background-color: #d1232a;
-            color: white;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-        .main-content {
-            text-align: center;
-            max-width: 700px;
-            padding: 0 20px;
-        }
-        h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            margin-bottom: 20px;
-            line-height: 1.2;
-            color: #f8fafc;
-        }
-        h1 span { color: #d1232a; }
-        p {
-            font-size: 1.2rem;
+
+        .back-btn {
             color: #94a3b8;
-            margin-bottom: 40px;
-            line-height: 1.5;
-        }
-        .btn-group {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
-        .btn {
-            padding: 14px 32px;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 700;
             text-decoration: none;
-            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            transition: color 0.3s;
         }
-        .btn-primary {
+
+        .back-btn:hover {
+            color: #ffffff;
+        }
+
+        .live-badge {
             background-color: #d1232a;
             color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            animation: blink 1.5s infinite;
         }
-        .btn-primary:hover { background-color: #b91c22; }
-        .btn-outline {
-            border: 2px solid #475569;
+
+        @keyframes blink {
+            50% { opacity: 0.5; }
+        }
+
+        /* 메인 컨테이너 */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 60px 20px;
+            flex: 1;
+        }
+
+        /* 토론 헤더 */
+        .debate-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .debate-header h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .debate-header p {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        /* 1:1 토론 매치업 매트릭스 */
+        .matchup-grid {
+            display: grid;
+            grid-template-columns: 1fr 120px 1fr;
+            gap: 20px;
+            align-items: center;
+            background-color: #112240;
+            border: 1px solid #1e3a8a;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        /* 토론자 프로필 */
+        .debater {
+            text-align: center;
+        }
+
+        .debater-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: #1e293b;
+            margin: 0 auto 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            border: 3px solid #334155;
+        }
+
+        .gamst .debater-avatar {
+            border-color: #eab308; /* 감스트 상징 오렌지/옐로우 계열 두께감 */
+            background: linear-gradient(135deg, #1e293b, #451a03);
+        }
+
+        .hmb .debater-avatar {
+            border-color: #d1232a; /* 국가대표 상징 레드 */
+            background: linear-gradient(135deg, #1e293b, #1e1b4b);
+        }
+
+        .debater-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .debater-title {
+            font-size: 0.9rem;
+            color: #38bdf8;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .quote-box {
+            background-color: rgba(15, 23, 42, 0.6);
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #cbd5e1;
+            text-align: left;
+            border-left: 4px solid #475569;
+        }
+
+        .gamst .quote-box { border-left-color: #eab308; }
+        .hmb .quote-box { border-left-color: #d1232a; }
+
+        /* VS 영역 */
+        .vs-zone {
+            text-align: center;
+        }
+
+        .vs-circle {
+            width: 70px;
+            height: 70px;
+            background-color: #d1232a;
             color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.5rem;
+            margin: 0 auto;
+            box-shadow: 0 0 20px rgba(209, 35, 42, 0.5);
         }
-        .btn-outline:hover { border-color: white; background-color: rgba(255,255,255,0.05); }
-        footer { padding-bottom: 30px; font-size: 0.9rem; color: #64748b; }
-        
-        @media (max-width: 768px) {
-            h1 { font-size: 2.3rem; }
-            p { font-size: 1rem; }
-            .btn-group { flex-direction: column; }
+
+        /* 실시간 토론 참여/댓글 섹션 */
+        .chat-section {
+            background-color: #112240;
+            border: 1px solid #233554;
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .chat-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-count {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        .chat-box {
+            max-height: 350px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-right: 10px;
+        }
+
+        /* 스크롤바 디자인 */
+        .chat-box::-webkit-scrollbar { width: 6px; }
+        .chat-box::-webkit-scrollbar-track { background: #0c192c; }
+        .chat-box::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+
+        .chat-message {
+            background-color: #1e293b;
+            padding: 15px;
+            border-radius: 8px;
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chat-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+        }
+
+        .user-name {
+            font-weight: 700;
+        }
+
+        .user-pick.pick-gamst { color: #eab308; }
+        .user-pick.pick-hmb { color: #f43f5e; }
+
+        .message-text {
+            font-size: 0.95rem;
+            color: #e2e8f0;
+            line-height: 1.4;
+        }
+
+        /* 입력 폼 */
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .select-pick {
+            background-color: #1e293b;
+            color: white;
+            border: 1px solid #334155;
+            padding: 0 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .chat-input {
+            flex: 1;
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 14px 20px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .chat-input:focus {
+            border-color: #38bdf8;
+        }
+
+        .submit-btn {
+            background-color: #38bdf8;
+            color: #0c192c;
+            border: none;
+            padding: 0 24px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .submit-btn:hover {
+            background-color: #7dd3fc;
+        }
+
+        /* 반응형 모바일 대응 */
+        @media (max-width: 900px) {
+            .matchup-grid {
+                grid-template-columns: 1fr;
+                padding: 24px;
+                gap: 30px;
+            }
+            .vs-zone {
+                order: -1;
+                padding: 10px 0;
+                border-bottom: 1px solid #233554;
+            }
+            .debate-header h1 { font-size: 1.8rem; }
+            .input-group { flex-direction: column; }
+            .select-pick, .submit-btn { padding: 14px; }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="tag">KOREAN FOOTBALL REPORT</div>
-    </header>
-    
-    <div class="main-content">
-        <h1>우리나라 축구,<br>지금 <span>괜찮은가?</span></h1>
-        <p>대표팀의 방향성부터 인프라, 세대교체까지.<br>대한민국 축구의 현재 주소를 날카롭게 짚어봅니다.</p>
-        <div class="btn-group">
-            <!-- 🔗 href 속성을 #intro에서 main.html로 수정했습니다 -->
-            <a href="main.html" class="btn btn-primary">토론 참여하기</a>
-            <a href="#analysis" class="btn btn-outline">현실 진단 보기</a>
-        </div>
-    </div>
-    
-    <footer>
-        &copy; 2026 Korean Football Insight. All rights reserved.
-      
-    </footer>
-</body>
-</html>
+
+    <!-- 상단 네비게이션 -->
+    <nav>
+        <a href="index.html" class="back-btn">← 대문으로 돌아가기</a>
+        <div class="live-badge">LIVE DEBATE</div>
+    </nav>
+
+    <div class="container">
+        <!-- 상단 헤더 -->
+        <header class="debate-header">
+            <h1>끝장 라이브 토론</h1>
+            <p>축구팬들의 민심 대변인 vs 대한민국 국가대표팀 사령탑</p>
+        </header>
+
+        <!-- 1:1 매치업 구도 섹션 -->
+        <section class="matchup-grid">
+            <!-- 감스트 진영 -->
+            <div class="debater gamst">
+                <div class="debater-avatar">🎙️</div>
+                <div class="debater-name">감스트</div>
+                <div class="debater-title">인터넷 방송인 / 축구 크리에이터</div>
+                <div class="quote-box">
+                    "팬들이 원하는 건 명확한 절차와 투명한 행정입니다! 감독 선임 과정에서 보여준 독단적인 모습에 팬들은 지쳤고, 경기력 또한 유럽파 개인 기량에 지나치게 의존하고 있습니다. 변화가 필요합니다!"
+                </div>
+            </div>
+
+            <!-- VS 중앙 배치 -->
+            <div class="vs-zone">
+                <div class="vs-circle">VS</div>
+            </div>
+
+            <!-- 홍명보 진영 -->
+            <div class="debater hmb">
+                <div class="debater-avatar">👔</div>
+                <div class="debater-name">홍명보</div>
+                <div class="debater-title">대한민국 축구 국가대표팀 감독</div>
+                <div class="quote-box">
+                    "바깥에서 보는 우려와 내부에서 직접 준비하는 현실에는 격차가 있습니다. 국가대표팀이라는 자리는 결과로 증명해야 하는 곳입니다. 묵묵히 팀의 조직력을 다져 월드컵 본선에서 성과를 내겠습니다."
+                </div>
+            </div>
+        </section>
+
+        <!-- 팬들의 한 줄 토론 참여 공간 -->
+        <section class="chat-section">
+            <div class="chat-title">
+                <h2>실시간 의견 나누기</h2>
+                <div class="chat-count">참여 3,412명</div>
+            </div>
+
+            <!-- 대화창 상자 -->
+            <div class="chat-box" id="chatBox">
+                <div class="chat-message">
+                    <div class="chat-meta">
+                        <span class="user-name">축구조아</span>
+                        <span class="user-pick pick-gamst">[감스트 지지]</span>
+                    </div>
+
